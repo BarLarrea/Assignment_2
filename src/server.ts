@@ -12,7 +12,10 @@ app.use(express.json()); // Parse JSON requests
 
 // MongoDB Connection
 if (process.env.MONGO_URI === undefined || process.env.MONGO_URI === "")
+{
   console.log("MONGO_URI is not set");
+  process.exit(1);
+}
 else
 {
   mongoose
@@ -23,7 +26,7 @@ else
 
 // Start the server
 let PORT: number = parseInt(process.env.PORT || "", 10)
-if (isFinite(PORT))
+if (isNaN(PORT))
   PORT = 5000;
 
 app.listen(PORT, () => {
