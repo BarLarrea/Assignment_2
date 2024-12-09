@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import  userRoute from './routes/userRoute';
 
 
 const app: Application = express();
@@ -16,14 +17,15 @@ if (process.env.MONGO_URI === undefined || process.env.MONGO_URI === "")
   console.log("MONGO_URI is not set");
   process.exit(1);
 }
-else
-{
+else{
   mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => console.log('MongoDB connected...'))
   .catch((err) => console.error('MongoDB connection failed:', err));
 }
 
+// Routes
+app.use("/users", userRoute); // User Routes
 // Start the server
 let PORT: number = parseInt(process.env.PORT || "", 10)
 if (isNaN(PORT))
