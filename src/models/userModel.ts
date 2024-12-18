@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { refreshToken } from "../controller/userController";
 
 const userSchema = new Schema({
     firstName: {
@@ -17,6 +18,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    refreshToken:{
+        type: [String],
+        default: [],
+    }
 });
 
 const User = mongoose.model("User", userSchema);
