@@ -1,36 +1,35 @@
-import express, { Application } from 'express';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import  userRoute from './routes/userRoute';
+import express, { Application } from "express";
+import dotenv from "dotenv";
+import connectDB from "./middleWare/db";
+import userRoutes from "./routes/userRoute";
+import errorHandler from "./middleWare/errorHandler";
+
+
+dotenv.config();
+
 
 
 const app: Application = express();
 
-dotenv.config();
+app.use(express.json());
 
-// Middleware
-app.use(express.json()); // Parse JSON requests
+app.use("/users", userRoutes);
 
-// MongoDB Connection
-if (process.env.MONGO_URI === undefined || process.env.MONGO_URI === "")
-{
-  console.log("MONGO_URI is not set");
-  process.exit(1);
-}
-else{
-  mongoose
-  .connect(process.env.MONGO_URI as string)
-  .then(() => console.log('MongoDB connected...'))
-  .catch((err) => console.error('MongoDB connection failed:', err));
-}
 
-// Routes
-app.use("/users", userRoute); // User Routes
-// Start the server
-let PORT: number = parseInt(process.env.PORT || "", 10)
-if (isNaN(PORT))
-  PORT = 5000;
+app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start the server due to DB connection issue.");
+        process.exit(1); 
+    }
+};
+
+startServer();
