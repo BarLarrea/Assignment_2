@@ -1,7 +1,15 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import { refreshToken } from "../controller/userController";
 
-const userSchema = new Schema({
+interface IUser {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    refreshToken: string[];
+}
+
+const userSchema = new Schema<IUser>({
     firstName: {
         type: String,
         required: true,
@@ -24,5 +32,7 @@ const userSchema = new Schema({
     }
 });
 
-const User = mongoose.model("User", userSchema);
-export default User;
+export default mongoose.model<IUser>("User", userSchema);
+
+
+export interface UserDocument extends IUser, Document {}
