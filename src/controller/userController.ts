@@ -3,8 +3,8 @@ import bcrypt from "bcryptjs";
 import errorHandler from "../middleWare/errorHandler";  
 import User from "../models/userModel"; 
 import asyncHandler from "express-async-handler";
-import jwt from "jsonwebtoken";
-import {generateAccessToken,generateRefreshToken,verifyRefreshToken} from "../middleWare/jwtMiddle"; // Adjust path if needed
+import jwt, { JwtPayload } from "jsonwebtoken";
+import {generateAccessToken,generateRefreshToken,verifyAccessToken, verifyRefreshToken} from "../middleWare/jwtMiddle"; // Adjust path if needed
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -157,27 +157,33 @@ export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 
-
-
 // Auth Middleware
 export const auth = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
+
+    console.log(token);
 
     if (!token) {
         res.status(401);
         throw new Error("Access token required");
     }
 
-    jwt.verify(token, ACCESS_TOKEN_SECRET, (err, data) => {
-        if (err) {
-            res.status(403);
-            throw new Error("Invalid or expired access token");
-        }
+    const payload = verifyAccessToken(token);
 
-        const payload = data as { userId: string };
-        req.query.userid = payload.userId;
-        console.log("User authenticated successfully: ", payload.userId);
-        next();
-    });
+    if (!payload) {
+        res.status(403);
+        throw new Error("Invalid or expired access token");
+    }
+
+    const user = await User.findById(payload.userId);
+
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found");
+    }
+
+    req.user = user;
+
+    next();
 });
