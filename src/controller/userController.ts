@@ -22,7 +22,7 @@ export const registerUser = asyncHandler(async (req: Request, res: Response) => 
         res.status(400);
         throw new Error("All fields are required");
     }
-
+    
     const userExists = await User.findOne({ email });
     if (userExists) {
         res.status(400);
@@ -34,7 +34,6 @@ export const registerUser = asyncHandler(async (req: Request, res: Response) => 
 
     await user.save();
     res.status(201).json({ user });
-    console.log("User created successfully");
 });
 
 // Login User
@@ -55,14 +54,11 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(user._id.toString());
     const refreshToken = generateRefreshToken(user._id.toString());
 
-    if(user.refreshToken == null){
-        user.refreshToken = [];
-    }
+   
     user.refreshToken.push(refreshToken);
     await user.save();
 
     res.status(200).json({email: user.email, id:user._id, accessToken, refreshToken });
-    console.log("User logged in successfully");
 });
 
 // Refresh Token
@@ -70,35 +66,24 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
     const { token } = req.body;
 
     if (!token) {
-        res.status(400);
+        res.status(403);
         throw new Error("Refresh token required");
     }
-
     const user = await User.findOne({ refreshToken: token });
     if (!user) {
+        
         res.status(403);
         throw new Error("Invalid refresh token");
     }
-
-    jwt.verify(token, REFRESH_TOKEN_SECRET, async (err :any, data :any) => {
-        if (err) {
-            res.status(403);
-            throw new Error("Expired or invalid refresh token");
-        }
-
-    if(!user.refreshToken || !user.refreshToken.includes(token)){
-        res.status(403);
+    let payload: JwtPayload;
+    try {
+        payload = jwt.verify(token, REFRESH_TOKEN_SECRET) as JwtPayload;
+    } catch (err) {
         user.refreshToken = [];
         await user.save();
-        throw new Error("Invalid refresh token");
+        res.status(403);
+        throw new Error("Expired or invalid refresh token");
     }
-
-        const payload = data as { userId: string };
-        if (payload.userId !== user._id.toString()) {
-            res.status(403);
-            throw new Error("Token does not match user ID");
-        }
-
         // Generate new tokens
         const newAccessToken = generateAccessToken(user._id.toString());
         const newRefreshToken = generateRefreshToken(user._id.toString());
@@ -109,7 +94,6 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
         await user.save();
 
         res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
-    });
 });
 
 // Logout User
@@ -153,16 +137,45 @@ export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
     await user.save();
 
     res.status(200).json({ message: "User logged out successfully" });
-    console.log("User logged out successfully");
 });
 
+// Update User
+export const updateUser = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user!;
+    const { firstName, lastName } = req.body;
+    
+    if(!firstName || !lastName){
+        res.status(400);
+        throw new Error("All fields are required");
+    }
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+        message: "User updated successfully",
+        user: {
+            id: updatedUser._id,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+        },
+    });
+});
+
+// Delete User
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user!;
+
+    await user.deleteOne();
+
+    res.status(200).json({ message: "User deleted successfully" });
+});
 
 // Auth Middleware
 export const auth = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
-
-    console.log(token);
 
     if (!token) {
         res.status(401);
