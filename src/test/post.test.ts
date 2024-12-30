@@ -11,7 +11,6 @@ import { describe, it, beforeAll, expect, test, jest } from "@jest/globals";
 process.env.NODE_ENV = "test";
 jest.setTimeout(10000);
 
-
 describe("Post Endpoints", () => {
     let accessToken: string;
     let refreshToken: string;
@@ -128,6 +127,4 @@ describe("Post Endpoints", () => {
         expect(res.status).toEqual(404);
         expect(res.body.message).toEqual("Post not found");
     });
-
-
 });
