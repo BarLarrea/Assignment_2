@@ -7,6 +7,7 @@
     "assignment_2": "file:",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "coverage": "^0.4.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
     "express-async-handler": "^1.2.0",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/supertest": "^6.0.2",
     "jest": "^29.7.0",
