@@ -36,15 +36,6 @@ export const getPostById = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(post);
 });
 
-// Get Posts By userId
-export const getPostByUserId = asyncHandler(async (req: Request, res: Response) => {
-    const user = req.user!;
-    console.log(user);
-    const posts = await Post.find({ userId: user._id });
-    res.status(200).json(posts);
-    console.log("Posts fetched successfully");
-});
-
 // Update Post
 export const updatePost = asyncHandler(async (req: Request, res: Response) => {
     const post = await Post.findById(req.params.id);
