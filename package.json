@@ -20,7 +20,6 @@
     "test:coverage": "jest --detectOpenHandles --forceExit --runInBand --coverage",
     "testAuth": "jest --detectOpenHandles --forceExit user.test.ts  --runInBand --coverage",
     "testPost": "jest --detectOpenHandles --forceExit post.test.ts",
-    "testComment": "jest --detectOpenHandles --forceExit comment.test.ts --coverage",
     "start": "nodemon ./src/server.ts"
   },
   "jest": {

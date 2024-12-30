@@ -16,6 +16,7 @@ export const createPost = asyncHandler(async (req: Request, res: Response) => {
     });
     await post.save();
     res.status(201).json(post);
+    console.log("Post created successfully");
 
 });
 
@@ -41,6 +42,7 @@ export const getPostByUserId = asyncHandler(async (req: Request, res: Response) 
     console.log(user);
     const posts = await Post.find({ userId: user._id });
     res.status(200).json(posts);
+    console.log("Posts fetched successfully");
 });
 
 // Update Post
