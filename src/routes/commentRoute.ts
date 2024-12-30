@@ -11,7 +11,7 @@ import { auth } from "../controller/userController";
 
 const router = express.Router();
 
-router.post("/", auth, postComment);
+router.post("/create", auth, postComment);
 
 router.get("/", auth, getAllComments);
 

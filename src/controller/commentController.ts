@@ -6,9 +6,10 @@ import Comment from "../models/commentModel";
 // Create Comment
 export const postComment = asyncHandler(async (req: Request , res: Response) => {
     const { message, postId } = req.body;
-    const user = req.user!; 
+    const user = req.user!;
+    console.log("user",user);
 
-    if (!message || !postId || !user) {
+    if (!message || !postId) {
     res.status(400); 
     throw new Error("All fields are required"); 
     }

@@ -16,7 +16,6 @@ export const createPost = asyncHandler(async (req: Request, res: Response) => {
     });
     await post.save();
     res.status(201).json(post);
-    console.log("Post created successfully");
 
 });
 
@@ -24,7 +23,6 @@ export const createPost = asyncHandler(async (req: Request, res: Response) => {
 export const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
     const posts = await Post.find({});
     res.status(200).json(posts);
-    console.log("All posts fetched successfully");
 });
 
 // Get Post By Id
@@ -35,7 +33,6 @@ export const getPostById = asyncHandler(async (req: Request, res: Response) => {
         throw new Error("Post not found");
     }
     res.status(200).json(post);
-    console.log("Post fetched successfully");
 });
 
 // Get Posts By userId
@@ -44,7 +41,6 @@ export const getPostByUserId = asyncHandler(async (req: Request, res: Response) 
     console.log(user);
     const posts = await Post.find({ userId: user._id });
     res.status(200).json(posts);
-    console.log("Posts fetched successfully");
 });
 
 // Update Post
@@ -62,7 +58,6 @@ export const updatePost = asyncHandler(async (req: Request, res: Response) => {
     post.message = message;
     await post.save();
     res.status(200).json(post);
-    console.log("Post updated successfully");
 });
 
 
@@ -75,5 +70,4 @@ export const deletePost = asyncHandler(async (req: Request, res: Response) => {
     }
     await post.deleteOne();
     res.status(200).json({ message: "Post removed" });
-    console.log("Post deleted successfully");
 });
