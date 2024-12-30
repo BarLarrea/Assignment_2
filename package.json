@@ -18,7 +18,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit --runInBand",
     "test:coverage": "jest --detectOpenHandles --forceExit --runInBand --coverage",
-    "testAuth": "jest --detectOpenHandles --forceExit user.test.ts  --runInBand",
+    "testAuth": "jest --detectOpenHandles --forceExit user.test.ts  --runInBand --coverage",
     "testPost": "jest --detectOpenHandles --forceExit post.test.ts",
     "start": "nodemon ./src/server.ts"
   },
