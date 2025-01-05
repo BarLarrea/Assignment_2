@@ -1,13 +1,8 @@
 import express from "express";
-import {
-  postComment,
-  getAllComments,
-  getCommentById,
-  getCommentsByUserId,
-  updateComment,
-  deleteComment,
-} from "../controller/commentController";
+import { postComment, getAllComments, getCommentById,
+  getCommentsByUserId, updateComment, deleteComment,} from "../controller/commentController";
 import { auth } from "../controller/userController";
+
 
 const router = express.Router();
 
