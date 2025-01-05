@@ -10,7 +10,7 @@ const options = {
         info: {
             title: "Assignment_2 - REST API",
             version: "1.0.0",
-            description: "REST server including authentication using JWT",
+            description: "REST API using Node.js, Express, Jest, and Swagger",
             license: {
                 name: "MIT",
                 url: "https://spdx.org/licenses/MIT.html",
